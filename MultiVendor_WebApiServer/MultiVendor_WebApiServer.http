@@ -1,0 +1,6 @@
+@MultiVendor_WebApiServer_HostAddress = http://localhost:5243
+
+GET {{MultiVendor_WebApiServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

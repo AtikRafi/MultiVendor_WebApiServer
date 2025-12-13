@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="MultiVendor_WebApiServer/MultiVendor_WebApiServer.csproj" />
+</Solution>
