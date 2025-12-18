@@ -6,6 +6,7 @@ namespace MultiVendor_WebApiServer.Services
     public interface IUnitOfWork
     {
         ICategoryRepository Categories { get; }
+        IProductRepository Products { get; }
         Task<int> SaveAsAsync();
     }
 
@@ -14,11 +15,13 @@ namespace MultiVendor_WebApiServer.Services
         private readonly AppDbContext context;
 
         public ICategoryRepository Categories { get; }
+        public IProductRepository Products { get; } 
 
         public UnitOfWork(AppDbContext context)
         {
             this.context = context;
             Categories = new CategoryRepository(context);
+            Products = new ProductRepository(context);
         }
 
         public async Task<int> SaveAsAsync()
