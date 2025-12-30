@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MultiVendor_WebApiServer.Models
 {
@@ -7,7 +8,10 @@ namespace MultiVendor_WebApiServer.Models
     // ----------------------------
     public class ApplicantUser : IdentityUser
     {
-        // Extra properties can be added here
+        [PersonalData]
+        [Column(TypeName ="nvarchar(150)")]
+        public string FullName { get; set; }
+
     }
 
 }

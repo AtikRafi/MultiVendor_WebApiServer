@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace MultiVendor_WebApiServer.Models
 {
@@ -6,7 +7,7 @@ namespace MultiVendor_WebApiServer.Models
     // ----------------------------
     // DbContext
     // ----------------------------
-    public class AppDbContext:DbContext
+    public class AppDbContext:IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -25,6 +26,8 @@ namespace MultiVendor_WebApiServer.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
+
+        public DbSet<ApplicantUser> ApplicantUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
