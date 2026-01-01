@@ -16,9 +16,9 @@ namespace MultiVendor_WebApiServer.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProperty> CategoryProperties { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductImage> ProductImages { get; set; }
+        //public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
-        public DbSet<ProductVariantImage> ProductVariantImages { get; set; }
+        //public DbSet<ProductVariantImage> ProductVariantImages { get; set; }
         public DbSet<ProductPropertyValue> ProductPropertyValues { get; set; }
         public DbSet<ProductVariantPropertyValue> ProductVariantPropertyValues { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -66,11 +66,11 @@ namespace MultiVendor_WebApiServer.Models
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict); // Restrict
 
-            modelBuilder.Entity<Product>()
-                .HasMany(p => p.Images)
-                .WithOne(pi => pi.Product)
-                .HasForeignKey(pi => pi.ProductId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
+            //modelBuilder.Entity<Product>()
+            //    .HasMany(p => p.Images)
+            //    .WithOne(pi => pi.Product)
+            //    .HasForeignKey(pi => pi.ProductId)
+            //    .OnDelete(DeleteBehavior.Cascade); // Safe
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.PropertyValues)
@@ -84,11 +84,11 @@ namespace MultiVendor_WebApiServer.Models
                 .HasForeignKey(v => v.ProductId)
                 .OnDelete(DeleteBehavior.Cascade); // Safe
 
-            modelBuilder.Entity<ProductVariant>()
-                .HasMany(v => v.Images)
-                .WithOne(vi => vi.Variant)
-                .HasForeignKey(vi => vi.ProductVariantId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
+            //modelBuilder.Entity<ProductVariant>()
+            //    .HasMany(v => v.Images)
+            //    .WithOne(vi => vi.Variant)
+            //    .HasForeignKey(vi => vi.ProductVariantId)
+            //    .OnDelete(DeleteBehavior.Cascade); // Safe
 
             modelBuilder.Entity<ProductVariant>()
                 .HasMany(v => v.Properties)

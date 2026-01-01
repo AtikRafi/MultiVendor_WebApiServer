@@ -179,10 +179,11 @@ namespace MultiVendor_WebApiServer.Models
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; } = null!;
 
+
         [ForeignKey(nameof(VendorId))]
         public Vendor Vendor { get; set; } = null!;
 
-        public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
+        //public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
         public ICollection<ProductPropertyValue> PropertyValues { get; set; } = new List<ProductPropertyValue>();
         public ICollection<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
     }
@@ -190,26 +191,26 @@ namespace MultiVendor_WebApiServer.Models
     // ----------------------------
     // Product Images
     // ----------------------------
-    public class ProductImage
-    {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+    //public class ProductImage
+    //{
+    //    [Key]
+    //    public Guid Id { get; set; } = Guid.NewGuid();
 
-        [Required]
-        public Guid ProductId { get; set; }
+    //    [Required]
+    //    public Guid ProductId { get; set; }
 
-        [NotMapped]
-        public IFormFile? FormFile { get; set; }
+    //    [NotMapped]
+    //    public IFormFile? FormFile { get; set; }
 
-        [Required, StringLength(500)]
-        public string PicturePath { get; set; } = null!;
+    //    [Required, StringLength(500)]
+    //    public string PicturePath { get; set; } = null!;
 
-        public int DisplayOrder { get; set; }
-        public bool IsMain { get; set; }
+    //    public int DisplayOrder { get; set; }
+    //    public bool IsMain { get; set; }
 
-        [ForeignKey(nameof(ProductId))]
-        public Product Product { get; set; } = null!;
-    }
+    //    [ForeignKey(nameof(ProductId))]
+    //    public Product Product { get; set; } = null!;
+    //}
 
     // ----------------------------
     // Product Variant
@@ -237,29 +238,32 @@ namespace MultiVendor_WebApiServer.Models
         [ForeignKey(nameof(ProductId))]
         public Product Product { get; set; } = null!;
 
-        public ICollection<ProductVariantImage> Images { get; set; } = new List<ProductVariantImage>();
-        public ICollection<ProductVariantPropertyValue> Properties { get; set; } = new List<ProductVariantPropertyValue>();
-    }
-
-    public class ProductVariantImage
-    {
-        [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
-
-        [Required]
-        public Guid ProductVariantId { get; set; }
-
-        [NotMapped]
-        public IFormFile? FormFile { get; set; }
-
         [Required, StringLength(500)]
         public string PicturePath { get; set; } = null!;
 
-        public int DisplayOrder { get; set; }
-
-        [ForeignKey(nameof(ProductVariantId))]
-        public ProductVariant Variant { get; set; } = null!;
+        //public ICollection<ProductVariantImage> Images { get; set; } = new List<ProductVariantImage>();
+        public ICollection<ProductVariantPropertyValue> Properties { get; set; } = new List<ProductVariantPropertyValue>();
     }
+
+    //public class ProductVariantImage
+    //{
+    //    [Key]
+    //    public Guid Id { get; set; } = Guid.NewGuid();
+
+    //    [Required]
+    //    public Guid ProductVariantId { get; set; }
+
+    //    [NotMapped]
+    //    public IFormFile? FormFile { get; set; }
+
+    //    [Required, StringLength(500)]
+    //    public string PicturePath { get; set; } = null!;
+
+    //    public int DisplayOrder { get; set; }
+
+    //    [ForeignKey(nameof(ProductVariantId))]
+    //    public ProductVariant Variant { get; set; } = null!;
+    //}
 
     public class ProductPropertyValue
     {

@@ -17,8 +17,8 @@ namespace MultiVendor_WebApiServer.Controllers
         public string Password { get; set; } = null!;
 
         public string Role { get; set; } = null!;
-        public string Gender { get; set; } = null!;
-        public int Age { get; set; }
+        //public string Gender { get; set; } = null!;
+        //public int Age { get; set; }
        
     }
     public class LogInModel
@@ -46,8 +46,8 @@ namespace MultiVendor_WebApiServer.Controllers
             {
                 UserName = userRegistrationModel.Email,
                 FullName = userRegistrationModel.FullName,
-                Gender = userRegistrationModel.Gender,
-                DOB = DateOnly.FromDateTime(DateTime.Now.AddYears(-userRegistrationModel.Age)),
+                //Gender = userRegistrationModel.Gender,
+                //DOB = DateOnly.FromDateTime(DateTime.Now.AddYears(-userRegistrationModel.Age)),
                 Email = userRegistrationModel.Email,
             };
 
@@ -72,8 +72,8 @@ namespace MultiVendor_WebApiServer.Controllers
                 ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
                 {
                     new Claim("UserId", user.Id.ToString()),
-                    new Claim("Gender", user.Gender.ToString()),
-                    new Claim("Age", (DateTime.Now.Year - user.DOB.Year).ToString()),
+                    //new Claim("Gender", user.Gender.ToString()),
+                    //new Claim("Age", (DateTime.Now.Year - user.DOB.Year).ToString()),
                     new Claim(ClaimTypes.Role, roles.First())
                 });
 
