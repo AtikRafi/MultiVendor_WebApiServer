@@ -12,8 +12,8 @@ using MultiVendor_WebApiServer.Models;
 namespace MultiVendor_WebApiServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251228110439_ApplicantUser")]
-    partial class ApplicantUser
+    [Migration("20260104150305_Initial-database")]
+    partial class Initialdatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -283,6 +283,13 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Name = "Electronics"
+                        });
                 });
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.CategoryProperty", b =>
@@ -464,33 +471,6 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PicturePath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImages");
-                });
-
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductPropertyValue", b =>
                 {
                     b.Property<Guid>("Id")
@@ -529,6 +509,11 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
+                    b.Property<string>("PicturePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -547,30 +532,6 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVariants");
-                });
-
-            modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductVariantImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PicturePath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("ProductVariantId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductVariantId");
-
-                    b.ToTable("ProductVariantImages");
                 });
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductVariantPropertyValue", b =>
@@ -705,9 +666,16 @@ namespace MultiVendor_WebApiServer.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NIDNumber")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("VendorOwners");
@@ -908,17 +876,6 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.Navigation("Vendor");
                 });
 
-            modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductImage", b =>
-                {
-                    b.HasOne("MultiVendor_WebApiServer.Models.Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductPropertyValue", b =>
                 {
                     b.HasOne("MultiVendor_WebApiServer.Models.CategoryProperty", "CategoryProperty")
@@ -947,17 +904,6 @@ namespace MultiVendor_WebApiServer.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductVariantImage", b =>
-                {
-                    b.HasOne("MultiVendor_WebApiServer.Models.ProductVariant", "Variant")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Variant");
                 });
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductVariantPropertyValue", b =>
@@ -990,6 +936,17 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.Navigation("VendorOwner");
                 });
 
+            modelBuilder.Entity("MultiVendor_WebApiServer.Models.VendorOwner", b =>
+                {
+                    b.HasOne("MultiVendor_WebApiServer.Models.ApplicantUser", "User")
+                        .WithOne("VendorOwner")
+                        .HasForeignKey("MultiVendor_WebApiServer.Models.VendorOwner", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -1013,8 +970,6 @@ namespace MultiVendor_WebApiServer.Migrations
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.Product", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("PropertyValues");
 
                     b.Navigation("Variants");
@@ -1022,8 +977,6 @@ namespace MultiVendor_WebApiServer.Migrations
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductVariant", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("Properties");
                 });
 
@@ -1035,6 +988,11 @@ namespace MultiVendor_WebApiServer.Migrations
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.VendorOwner", b =>
                 {
                     b.Navigation("Vendors");
+                });
+
+            modelBuilder.Entity("MultiVendor_WebApiServer.Models.ApplicantUser", b =>
+                {
+                    b.Navigation("VendorOwner");
                 });
 #pragma warning restore 612, 618
         }

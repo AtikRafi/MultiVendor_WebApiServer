@@ -18,6 +18,7 @@ namespace MultiVendor_WebApiServer.Models
 
         //[PersonalData]
         //public DateOnly DOB { get; set; }
+        public VendorOwner? VendorOwner { get; set; }
 
       
 

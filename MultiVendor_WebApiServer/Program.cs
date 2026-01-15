@@ -40,6 +40,10 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    await RuntimeSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 app.ConfigureSwaggerExplorer()
     .ConfigureCros(builder.Configuration)

@@ -280,6 +280,13 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Name = "Electronics"
+                        });
                 });
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.CategoryProperty", b =>
@@ -459,6 +466,19 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.HasIndex("VendorId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("77777777-7777-7777-7777-777777777777"),
+                            BrandName = "Samsung",
+                            CategoryId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTime(2026, 1, 4, 12, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Latest Samsung flagship smartphone with high performance",
+                            IsPublished = true,
+                            Name = "Galaxy S25",
+                            VendorId = new Guid("22222222-2222-2222-2222-222222222222")
+                        });
                 });
 
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.ProductPropertyValue", b =>
@@ -656,9 +676,16 @@ namespace MultiVendor_WebApiServer.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NIDNumber")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("VendorOwners");
@@ -919,6 +946,17 @@ namespace MultiVendor_WebApiServer.Migrations
                     b.Navigation("VendorOwner");
                 });
 
+            modelBuilder.Entity("MultiVendor_WebApiServer.Models.VendorOwner", b =>
+                {
+                    b.HasOne("MultiVendor_WebApiServer.Models.ApplicantUser", "User")
+                        .WithOne("VendorOwner")
+                        .HasForeignKey("MultiVendor_WebApiServer.Models.VendorOwner", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.Category", b =>
                 {
                     b.Navigation("Products");
@@ -960,6 +998,11 @@ namespace MultiVendor_WebApiServer.Migrations
             modelBuilder.Entity("MultiVendor_WebApiServer.Models.VendorOwner", b =>
                 {
                     b.Navigation("Vendors");
+                });
+
+            modelBuilder.Entity("MultiVendor_WebApiServer.Models.ApplicantUser", b =>
+                {
+                    b.Navigation("VendorOwner");
                 });
 #pragma warning restore 612, 618
         }

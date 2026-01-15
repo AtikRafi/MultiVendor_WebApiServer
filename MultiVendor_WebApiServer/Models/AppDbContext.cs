@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace MultiVendor_WebApiServer.Models
 {
-
-    // ----------------------------
-    // DbContext
-    // ----------------------------
-    public class AppDbContext:IdentityDbContext
+    public class AppDbContext : IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -16,9 +14,7 @@ namespace MultiVendor_WebApiServer.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<CategoryProperty> CategoryProperties { get; set; }
         public DbSet<Product> Products { get; set; }
-        //public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
-        //public DbSet<ProductVariantImage> ProductVariantImages { get; set; }
         public DbSet<ProductPropertyValue> ProductPropertyValues { get; set; }
         public DbSet<ProductVariantPropertyValue> ProductVariantPropertyValues { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -26,7 +22,6 @@ namespace MultiVendor_WebApiServer.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Delivery> Deliveries { get; set; }
-
         public DbSet<ApplicantUser> ApplicantUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,65 +35,44 @@ namespace MultiVendor_WebApiServer.Models
             modelBuilder.Entity<Vendor>().HasIndex(v => v.VendorSlug).IsUnique();
 
             // -----------------------
-            // Relationships with Cascade where safe
+            // Relationships
             // -----------------------
             modelBuilder.Entity<VendorOwner>()
                 .HasMany(vo => vo.Vendors)
                 .WithOne(v => v.VendorOwner)
                 .HasForeignKey(v => v.VendorOwnerId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Vendor>()
                 .HasMany(v => v.Products)
                 .WithOne(p => p.Vendor)
                 .HasForeignKey(p => p.VendorId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
-
-            modelBuilder.Entity<Category>()
-                .HasMany(c => c.Properties)
-                .WithOne(cp => cp.Category)
-                .HasForeignKey(cp => cp.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Category>()
                 .HasMany(c => c.Products)
                 .WithOne(p => p.Category)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.Restrict); // Restrict
-
-            //modelBuilder.Entity<Product>()
-            //    .HasMany(p => p.Images)
-            //    .WithOne(pi => pi.Product)
-            //    .HasForeignKey(pi => pi.ProductId)
-            //    .OnDelete(DeleteBehavior.Cascade); // Safe
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.PropertyValues)
                 .WithOne(ppv => ppv.Product)
                 .HasForeignKey(ppv => ppv.ProductId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Variants)
                 .WithOne(v => v.Product)
                 .HasForeignKey(v => v.ProductId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
-
-            //modelBuilder.Entity<ProductVariant>()
-            //    .HasMany(v => v.Images)
-            //    .WithOne(vi => vi.Variant)
-            //    .HasForeignKey(vi => vi.ProductVariantId)
-            //    .OnDelete(DeleteBehavior.Cascade); // Safe
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProductVariant>()
                 .HasMany(v => v.Properties)
                 .WithOne(pvpv => pvpv.Variant)
                 .HasForeignKey(pvpv => pvpv.ProductVariantId)
-                .OnDelete(DeleteBehavior.Cascade); // Safe
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // -----------------------
-            // CartItems & Orders: Restrict (No Cascade)
-            // -----------------------
             modelBuilder.Entity<Customer>()
                 .HasMany(c => c.CartItems)
                 .WithOne(ci => ci.Customer)
@@ -169,6 +143,38 @@ namespace MultiVendor_WebApiServer.Models
             modelBuilder.Entity<Delivery>()
                 .Property(d => d.DeliveryStatus)
                 .HasConversion<string>();
+
+            // -----------------------
+            // Safe seed values
+            // -----------------------
+            // Only seed Category (no FK to Identity)
+            var categoryId = Guid.Parse("33333333-3333-3333-3333-333333333333");
+
+            modelBuilder.Entity<Category>().HasData(new Category
+            {
+                Id = categoryId,
+                Name = "Electronics"
+            });
+
+            var productId = Guid.Parse("77777777-7777-7777-7777-777777777777");
+            
+            var vendorId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Id = productId,
+                Name = "Galaxy S25",
+                BrandName = "Samsung",
+                Description = "Latest Samsung flagship smartphone with high performance",
+                CategoryId = categoryId,
+                VendorId = vendorId,
+                IsPublished = true,
+                CreatedAt = new DateTime(2026, 1, 4, 12, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = null
+            });
+
+
+            // ❌ VendorOwner and Vendor will be seeded at runtime to avoid FK conflicts
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -54,6 +53,10 @@ namespace MultiVendor_WebApiServer.Models
 
         [Required, StringLength(50)]
         public string NIDNumber { get; set; } = null!;
+        [Required]
+        public string UserId { get; set; } = null!;
+
+        public ApplicantUser User { get; set; } = null!;
 
         // Navigation
         public ICollection<Vendor> Vendors { get; set; } = new List<Vendor>();
@@ -183,34 +186,11 @@ namespace MultiVendor_WebApiServer.Models
         [ForeignKey(nameof(VendorId))]
         public Vendor Vendor { get; set; } = null!;
 
-        //public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
         public ICollection<ProductPropertyValue> PropertyValues { get; set; } = new List<ProductPropertyValue>();
         public ICollection<ProductVariant> Variants { get; set; } = new List<ProductVariant>();
     }
 
-    // ----------------------------
-    // Product Images
-    // ----------------------------
-    //public class ProductImage
-    //{
-    //    [Key]
-    //    public Guid Id { get; set; } = Guid.NewGuid();
-
-    //    [Required]
-    //    public Guid ProductId { get; set; }
-
-    //    [NotMapped]
-    //    public IFormFile? FormFile { get; set; }
-
-    //    [Required, StringLength(500)]
-    //    public string PicturePath { get; set; } = null!;
-
-    //    public int DisplayOrder { get; set; }
-    //    public bool IsMain { get; set; }
-
-    //    [ForeignKey(nameof(ProductId))]
-    //    public Product Product { get; set; } = null!;
-    //}
+   
 
     // ----------------------------
     // Product Variant
@@ -241,29 +221,11 @@ namespace MultiVendor_WebApiServer.Models
         [Required, StringLength(500)]
         public string PicturePath { get; set; } = null!;
 
-        //public ICollection<ProductVariantImage> Images { get; set; } = new List<ProductVariantImage>();
+        
         public ICollection<ProductVariantPropertyValue> Properties { get; set; } = new List<ProductVariantPropertyValue>();
     }
 
-    //public class ProductVariantImage
-    //{
-    //    [Key]
-    //    public Guid Id { get; set; } = Guid.NewGuid();
-
-    //    [Required]
-    //    public Guid ProductVariantId { get; set; }
-
-    //    [NotMapped]
-    //    public IFormFile? FormFile { get; set; }
-
-    //    [Required, StringLength(500)]
-    //    public string PicturePath { get; set; } = null!;
-
-    //    public int DisplayOrder { get; set; }
-
-    //    [ForeignKey(nameof(ProductVariantId))]
-    //    public ProductVariant Variant { get; set; } = null!;
-    //}
+    
 
     public class ProductPropertyValue
     {

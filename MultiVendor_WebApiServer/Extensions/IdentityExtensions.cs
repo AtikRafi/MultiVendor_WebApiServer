@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using MultiVendor_WebApiServer.Migrations;
+
 using MultiVendor_WebApiServer.Models;
+using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using ApplicantUser = MultiVendor_WebApiServer.Models.ApplicantUser;
 
 namespace MultiVendor_WebApiServer.Extensions
@@ -72,5 +74,16 @@ namespace MultiVendor_WebApiServer.Extensions
             
             return app;
         }
+
+        public static class ClaimsExtensions
+        {
+            public static string GetUserId( ClaimsPrincipal user)
+            {
+                return user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                       ?? throw new Exception("UserId claim not found");
+            }
+        }
+
+
     }
 }
